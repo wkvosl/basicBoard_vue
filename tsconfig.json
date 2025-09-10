@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],   // Promise, async/await 지원
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": true
+  }
+}

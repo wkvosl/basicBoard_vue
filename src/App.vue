@@ -4,6 +4,7 @@ import Home from "@/components/Home.vue";
 import BoardList from "@/components/board/BoardList.vue";
 import Nav from "@/components/Nav.vue";
 
+
 export default {
   components:{
     Nav,
