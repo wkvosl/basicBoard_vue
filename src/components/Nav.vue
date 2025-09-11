@@ -4,10 +4,10 @@
 
 <template>
 
-  <div class="nav">
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/board/list">게시판 목록</RouterLink>
-  </div>
+  <ul class="menu menu-horizontal bg-base-200 w-screen">
+    <li><RouterLink to="/">Home</RouterLink></li>
+    <li><RouterLink to="/board/list">게시판 목록</RouterLink></li>
+  </ul>
 
 </template>
 
