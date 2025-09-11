@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from "@/components/Home.vue";
-import BoardList from "@/components/board/BoardList.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
+import BoardList from "@/components/board/BoardList.vue";
 
 const routes = [
     {
