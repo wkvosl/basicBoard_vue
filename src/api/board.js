@@ -1,12 +1,14 @@
 import {api} from "@/api/basicApi.js";
 
-export async function fetchBoard(pageNumber){
-    const res = await api.get("/board/list",{
-        params:{
-            page: pageNumber,
-            size: 10
-        }
-    });
+export async function fetchBoard(pageNumber = 1){
+    const params = {};
+
+    if(pageNumber){
+        params.page = pageNumber;
+        params.size = 10;
+    }
+
+    const res = await api.get("/board/list",{params});
     return res.data;
 }
 

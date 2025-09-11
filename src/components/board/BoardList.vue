@@ -6,7 +6,7 @@ import {fetchBoard} from "@/api/board";
 const boards = ref([]);
 
 // 페이지 정보
-const page = ref({
+const pageInfo = ref({
   number: 0,
   size: 10,
   totalPages: 0,
@@ -19,14 +19,14 @@ const page = ref({
 
 // totalPages 만큼 배열 생성 (v-for용)
 const totalPagesArray = computed(() => {
-  return Array.from({ length: page.value.totalPages }, (_, i) => i);
+  return Array.from({ length: pageInfo.value.totalPages }, (_, i) => i + 1);
 });
 
 // 데이터 호출
-async function loadBoards(pageNumber = 0) {
+async function loadBoards(pageNumber = 1) {
   const res = await fetchBoard(pageNumber); // 서버 API에서 pageNumber 전송
   boards.value = res.content;
-  page.value = res.page;
+  pageInfo.value = res.page;
 }
 
 // 페이지 이동
@@ -34,12 +34,20 @@ function goPage(pageNumber) {
   loadBoards(pageNumber);
 }
 
+function goFirstPage() {
+  if (!pageInfo.value.first) loadBoards(1);
+}
+
 function goPrevPage() {
-  if (!page.value.first) loadBoards(page.value.number - 1);
+  if (!pageInfo.value.first) loadBoards(pageInfo.value.number - 1);
 }
 
 function goNextPage() {
-  if (!page.value.last) loadBoards(page.value.number + 1);
+  if (!pageInfo.value.last) loadBoards(pageInfo.value.number + 1);
+}
+
+function goLastPage() {
+  if (!pageInfo.value.last) loadBoards(pageInfo.value.totalPages);
 }
 
 // 최초 호출
@@ -62,25 +70,25 @@ onMounted(() => {
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(board,i) in boards" :key="board.board_no">
-      <td>{{i + 1 + page.number * page.size }}</td>
-      <td><router-link :to="`/board/${board.board_no}`">{{board.board_title}}</router-link></td>
-      <td>{{board.board_content}}</td>
-      <td>{{board.board_writer}}</td>
-      <td>{{board.reg_date}}</td>
+    <tr v-for="(board,i) in boards" :key="board.boardNo">
+      <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
+      <td><router-link :to="`/board/${board.board_no}`">{{board.boardTitle}}</router-link></td>
+      <td>{{board.boardContent}}</td>
+      <td>{{board.boardWriter}}</td>
+      <td>{{board.regDate}}</td>
     </tr>
     </tbody>
   </table>
 </div>
 
   <div class="join">
-    <input class="join-item btn btn-square" type="radio" name="options"
-           v-for="page in totalPagesArray" :key="page"
-           :value="page"
-           :aria-label="String(page)"
-           @click="goPage(page)"
-    />
+    <button class="join-item btn" @click="goFirstPage()">«</button>
+    <button class="join-item btn" @click="goPrevPage()">〈</button>
+    <button class="join-item btn" v-for="page in totalPagesArray" :key="page" @click="goPage(page)">{{page}}</button>
+    <button class="join-item btn" @click="goNextPage()">〉</button>
+    <button class="join-item btn" @click="goLastPage()">»</button>
   </div>
+
 </template>
 
 <style scoped>
