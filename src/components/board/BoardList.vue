@@ -15,29 +15,30 @@ function detail(){
 
 <template>
 
-  <table>
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
     <thead>
-      <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>내용</th>
-        <th>작성자</th>
-        <th>작성일</th>
-      </tr>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>내용</th>
+      <th>작성자</th>
+      <th>작성일</th>
+    </tr>
     </thead>
     <tbody>
-      <tr v-for="(board,i) in boards" :key="board.board_no">
-        <td>{{i + 1 }}</td>
-        <td><router-link :to="`/board/${board.board_no}`">{{board.board_title}}</router-link></td>
-        <td>{{board.board_content}}</td>
-        <td>{{board.board_writer}}</td>
-        <td>{{board.reg_date}}</td>
-      </tr>
+    <tr v-for="(board,i) in boards" :key="board.board_no">
+      <td>{{i + 1 }}</td>
+      <td><router-link :to="`/board/${board.board_no}`">{{board.board_title}}</router-link></td>
+      <td>{{board.board_content}}</td>
+      <td>{{board.board_writer}}</td>
+      <td>{{board.reg_date}}</td>
+    </tr>
     </tbody>
   </table>
+</div>
 
 </template>
 
 <style scoped>
-
 </style>
