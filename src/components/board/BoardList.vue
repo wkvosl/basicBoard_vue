@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {fetchBoard} from "@/api/board";
 import {useRoute, useRouter} from "vue-router";
+import BoardSearch from "@/components/board/BoardSearch.vue";
 
 const route = useRoute();
 const router = useRouter();
+
+
+const search = ref(route.query.search || "");
+const category = ref(route.query.category || "");
 
 // 게시글 목록
 const boards = ref([]);
@@ -28,26 +33,35 @@ const totalPagesArray = computed(() => {
 
 // 현재 페이지 번호 (쿼리스트링에서 가져오거나 기본값 1)
 const currentPage = computed(() => {
-  // URL 쿼리 파라미터에서 'page'를 가져와 숫자로 변환합니다.
-  // 'page'가 없거나 유효하지 않으면 기본값 1을 사용합니다.
-  const pageFromQuery = Number(route.query.page) || 1;
-  return pageFromQuery;
+  return Number(route.query.page) || 1;
 });
 
-// 데이터 호출 및 라우터 쿼리 동기화
+
+
+function handleSearch(value){
+  search.value = value;
+}
+
+function handleCategory(value){
+  category.value = value;
+}
+
+// 페이지 이동// 데이터 호출 및 라우터 쿼리 동기화
 async function loadBoards(pageNumber: number) {
   // 쿼리 파라미터를 업데이트하여 URL에 페이지 번호를 반영합니다.
   router.push({
     name: "boardList",
-    query: { page: pageNumber }
+    query: {
+      page: pageNumber !== 1 ? pageNumber : undefined,
+      search: search.value || undefined,
+      category: category.value || undefined
+    }
   });
 
-  const res = await fetchBoard(pageNumber); // 서버 API에서 pageNumber 전송
+  const res = await fetchBoard(pageNumber, search.value, category.value);
   boards.value = res.content;
   pageInfo.value = res.page;
 }
-
-// 페이지 이동
 function goPage(pageNumber: number) {
   loadBoards(pageNumber);
 }
@@ -81,9 +95,14 @@ watch(
       loadBoards(Number(newPage) || 1);
     },
 );
+
+
 </script>
 
 <template>
+
+<BoardSearch @search="handleSearch" @category="handleCategory" @doSearch="loadBoards(1)"/>
+
   <div class="card bg-base-100 w-screen shadow-md">
     <div class="card-body">
       <div class="overflow-x-auto">
