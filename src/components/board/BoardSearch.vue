@@ -1,18 +1,20 @@
 <script setup >
+import { computed } from "vue";
 
-import {ref} from "vue";
+const props = defineProps(['keyword', 'searchCategory']);
+const emit = defineEmits(['update:keyword', 'update:searchCategory', 'doSearch']);
 
-const search = ref({
-      keyword:"",
-      searchCategory:""
-    }
-);
+const localKeyword = computed({
+  get: () => props.keyword,//읽기전용
+  set: (value) => emit('update:keyword', value)//쓰기전용
+});
 
-const emit = defineEmits(["search", "category", "doSearch"]);
+const localCategory = computed({
+  get: () => props.searchCategory || '',
+  set: (value) => emit('update:searchCategory', value)
+});
 
 function sendHandleSearch(){
-  emit('search', search.value.keyword);
-  emit('category', search.value.searchCategory);
   emit('doSearch');
 }
 
@@ -24,7 +26,8 @@ function sendHandleSearch(){
 
       <!--      <div class="flex items-start">-->
       <!--        <div>-->
-      <select v-model="search.searchCategory" class="select">
+      <select v-model="localCategory" class="select">
+        <option value="">전체</option>
         <option value="title">제목</option>
         <option value="content">내용</option>
         <option value="writer">작성자</option>
@@ -33,7 +36,7 @@ function sendHandleSearch(){
 
       <div>
         <label class="input">
-          <input v-model="search.keyword" @keyup.enter="sendHandleSearch" type="search" class="grow" placeholder="Search">
+          <input v-model="localKeyword" @keyup.enter="sendHandleSearch" type="search" class="grow" placeholder="Search">
         </label>
       </div>
 
