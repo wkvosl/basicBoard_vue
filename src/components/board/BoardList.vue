@@ -36,8 +36,6 @@ const currentPage = computed(() => {
   return Number(route.query.page) || 1;
 });
 
-
-
 function handleSearch(value){
   search.value = value;
 }
@@ -49,7 +47,7 @@ function handleCategory(value){
 // 페이지 이동// 데이터 호출 및 라우터 쿼리 동기화
 async function loadBoards(pageNumber: number) {
   // 쿼리 파라미터를 업데이트하여 URL에 페이지 번호를 반영합니다.
-  router.push({
+  await router.push({
     name: "boardList",
     query: {
       page: pageNumber !== 1 ? pageNumber : undefined,
@@ -101,7 +99,10 @@ watch(
 
 <template>
 
-<BoardSearch @search="handleSearch" @category="handleCategory" @doSearch="loadBoards(1)"/>
+<BoardSearch
+    @search="handleSearch"
+    @category="handleCategory"
+    @doSearch="loadBoards(1)"/>
 
   <div class="card bg-base-100 w-screen shadow-md">
     <div class="card-body">
