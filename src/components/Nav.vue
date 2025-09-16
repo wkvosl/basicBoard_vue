@@ -13,7 +13,7 @@ const goBoardList = () => {
 
 <template>
 
-  <ul class="menu menu-horizontal bg-base-200 w-screen">
+  <ul class="menu menu-horizontal bg-base-200 w-screen mb-5">
     <li><RouterLink :to="{name:'home'}">Home</RouterLink></li>
         <li><a href="#" @click.prevent="goBoardList">게시판 목록</a></li>
   </ul>

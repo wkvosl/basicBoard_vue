@@ -1,6 +1,6 @@
 <template>
 
-  <div class="card bg-base-100 shadow-md mt-5">
+  <div class="card bg-base-100 shadow-md">
     <div v-if="board" class="card-body">
       <h2 class="card-title"> {{board.boardTitle}}</h2>
       <p>{{board.boardContent}}</p>
