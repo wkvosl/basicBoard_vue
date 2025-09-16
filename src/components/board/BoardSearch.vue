@@ -27,10 +27,10 @@ function resetSearch(){
 </script>
 
 <template>
-  <div class="card bg-base-100 w-screen shadow-md">
-    <div class="card-body flex-row">
+  <div class="card bg-base-100 shadow-md">
+    <div class="card-body flex-row justify-start">
 
-      <select v-model="localCategory" class="select">
+      <select v-model="localCategory" class="select w-32">
         <option value="">전체</option>
         <option value="title">제목</option>
         <option value="content">내용</option>

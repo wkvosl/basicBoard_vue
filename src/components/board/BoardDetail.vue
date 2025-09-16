@@ -1,6 +1,6 @@
 <template>
 
-  <div class="card bg-base-100 w-2/4 shadow-md">
+  <div class="card bg-base-100 shadow-md mt-5">
     <div v-if="board" class="card-body">
       <h2 class="card-title"> {{board.boardTitle}}</h2>
       <p>{{board.boardContent}}</p>
@@ -15,9 +15,10 @@
 
   </div>
 
-  <div class="justify-end">
-    <button class="btn btn-primary" @click="goList">목록</button>
-  </div>
+    <div class="flex justify-end pt-6">
+      <button class="btn btn-primary" @click="goList">목록</button>
+      <button class="btn btn-primary ml-5">수정</button>
+    </div>
 
 
 

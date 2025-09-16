@@ -104,7 +104,7 @@ function goToDetail(boardId) {
       v-model:searchCategory="category"
       @doSearch="loadBoards(1)"/>
 
-  <div class="card bg-base-100 w-screen shadow-md">
+  <div class="card bg-base-100 shadow-md">
     <div class="card-body">
       <div class="overflow-x-auto">
         <div>

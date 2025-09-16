@@ -18,7 +18,12 @@ export default {
 <template>
 
   <Nav></Nav>
-  <RouterView :key="$route.fullPath"></RouterView>
+  <div class="flex justify-center ">
+    <div class="w-4/5 min-w-fit">
+      <RouterView :key="$route.fullPath"></RouterView>
+    </div>
+  </div>
+
 
 </template>
 
