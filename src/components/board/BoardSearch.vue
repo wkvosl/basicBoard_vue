@@ -1,8 +1,5 @@
 <script setup >
 import { computed } from "vue";
-import {useRoute} from "vue-router";
-
-const route = useRoute();
 
 const props = defineProps(['keyword', 'searchCategory']);
 const emit = defineEmits(['update:keyword', 'update:searchCategory', 'doSearch']);
@@ -33,15 +30,12 @@ function resetSearch(){
   <div class="card bg-base-100 w-screen shadow-md">
     <div class="card-body flex-row">
 
-      <!--      <div class="flex items-start">-->
-      <!--        <div>-->
       <select v-model="localCategory" class="select">
         <option value="">전체</option>
         <option value="title">제목</option>
         <option value="content">내용</option>
         <option value="writer">작성자</option>
       </select>
-      <!--        </div>-->
 
       <div>
         <label class="input">
