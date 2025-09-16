@@ -1,5 +1,8 @@
 <script setup >
 import { computed } from "vue";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
 
 const props = defineProps(['keyword', 'searchCategory']);
 const emit = defineEmits(['update:keyword', 'update:searchCategory', 'doSearch']);
@@ -15,6 +18,12 @@ const localCategory = computed({
 });
 
 function sendHandleSearch(){
+  emit('doSearch');
+}
+
+function resetSearch(){
+  emit('update:keyword','');
+  emit('update:searchCategory','');
   emit('doSearch');
 }
 
@@ -42,6 +51,7 @@ function sendHandleSearch(){
 
       <div class="card-actions">
         <button class="btn btn-primary btn-md	" @click="sendHandleSearch">검색</button>
+        <button class="btn btn-primary btn-md	" @click="resetSearch">초기화</button>
       </div>
     </div>
     <!--    </div>-->
