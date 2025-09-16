@@ -86,6 +86,14 @@ watch(
     },
 );
 
+//상세페이지 이동
+function goToDetail(boardId) {
+  router.push({
+    name: 'boardDetail',
+    params: { id: boardId },
+    state: { preParam: route.query }
+  });
+}
 
 </script>
 
@@ -113,7 +121,11 @@ watch(
             <tbody>
             <tr v-for="(board,i) in boards" :key="board.boardNo">
               <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
-              <td><router-link :to="`/board/${board.boardNo}`">{{board.boardTitle}}</router-link></td>
+              <td>
+                <button @click="goToDetail(board.boardNo)">
+                  {{ board.boardTitle }}
+                </button>
+              </td>
               <td>{{board.boardContent}}</td>
               <td>{{board.boardWriter}}</td>
               <td>{{board.regDate}}</td>
