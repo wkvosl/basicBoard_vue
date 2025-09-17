@@ -18,3 +18,8 @@ export async function fetchBoardById(id){
     const res = await api.get(`/board/${id}`);
     return res.data;
 }
+
+export async function fetchBoardSave(payload){
+    const res = await api.post("/board/save", payload);
+    return res.data;
+}

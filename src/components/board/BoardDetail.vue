@@ -16,8 +16,8 @@
   </div>
 
     <div class="flex justify-end pt-6">
-      <button class="btn btn-primary" @click="goList">목록</button>
-      <button class="btn btn-primary ml-5">수정</button>
+      <button class="btn btn-primary" @click="goToList">목록</button>
+      <button class="btn btn-primary ml-5" @click="goToModify">수정</button>
     </div>
 
 
@@ -47,12 +47,18 @@ onMounted(async () => {
   }
 });
 
-function goList(){
-  router.push(
-      {
+function goToList(){
+  router.push({
         name:'boardList',
-        query:  preParam
+        query: preParam
       });
+}
+
+function goToModify(){
+  router.push({
+    name:'boardModify',
+    state: {'preParam':preParam}
+  })
 }
 
 </script>
