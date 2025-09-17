@@ -1,17 +1,19 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  홈 화면
+  <div class>
+    <img src="@/assets/img/fall1.jpg" alt="fall1">
+  </div>
 
-  <div>dddddd</div>
+
+<!--  <div class="bg-cover bg-center" :style="{ backgroundImage: `url(${fall1Image})` }">-->
+<!--    <div class="h-auto"></div>-->
+<!--  </div>-->
+
+
 </template>
 
-<style scoped>
-div{
-  background: aquamarine;
-  width: 50px;
-  height: 50px;
-}
-</style>
+<script setup>
+import fall1Image from '@/assets/img/fall1.jpg';
+</script>
+
+
+

@@ -1,3 +1,62 @@
+
+<template>
+
+  <BoardSearch
+      v-model:keyword="search"
+      v-model:searchCategory="category"
+      @doSearch="loadBoards(1)"/>
+
+  <div class="card bg-base-100 shadow-md">
+    <div class="card-body">
+      <div class="overflow-x-auto">
+        <div>
+          <table class="table table-zebra">
+            <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>내용</th>
+              <th>작성자</th>
+              <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(board,i) in boards" :key="board.boardNo">
+              <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
+              <td>
+                <button @click="goToDetail(board.boardNo)">
+                  {{ board.boardTitle }}
+                </button>
+              </td>
+              <td>{{board.boardContent}}</td>
+              <td>{{board.boardWriter}}</td>
+              <td>{{board.regDate}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="join justify-center pt-6">
+        <button class="join-item btn" @click="goFirstPage()">«</button>
+        <button class="join-item btn" @click="goPrevPage()">〈</button>
+        <button
+            class="join-item btn"
+            v-for="page in totalPagesArray"
+            :key="page"
+            @click="goPage(page)"
+            :class="{ 'btn-active': page === currentPage }">
+          {{page}}
+        </button>
+        <button class="join-item btn" @click="goNextPage()">〉</button>
+        <button class="join-item btn" @click="goLastPage()">»</button>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+
 <script setup lang="ts">
 import {computed, onMounted, ref, watch} from "vue";
 import {fetchBoard} from "@/api/board";
@@ -97,62 +156,5 @@ function goToDetail(boardId) {
 
 </script>
 
-<template>
 
-  <BoardSearch
-      v-model:keyword="search"
-      v-model:searchCategory="category"
-      @doSearch="loadBoards(1)"/>
 
-  <div class="card bg-base-100 shadow-md">
-    <div class="card-body">
-      <div class="overflow-x-auto">
-        <div>
-          <table class="table table-zebra">
-            <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>내용</th>
-              <th>작성자</th>
-              <th>작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(board,i) in boards" :key="board.boardNo">
-              <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
-              <td>
-                <button @click="goToDetail(board.boardNo)">
-                  {{ board.boardTitle }}
-                </button>
-              </td>
-              <td>{{board.boardContent}}</td>
-              <td>{{board.boardWriter}}</td>
-              <td>{{board.regDate}}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="join justify-center pt-6">
-        <button class="join-item btn" @click="goFirstPage()">«</button>
-        <button class="join-item btn" @click="goPrevPage()">〈</button>
-        <button
-            class="join-item btn"
-            v-for="page in totalPagesArray"
-            :key="page"
-            @click="goPage(page)"
-            :class="{ 'btn-active': page === currentPage }">
-          {{page}}
-        </button>
-        <button class="join-item btn" @click="goNextPage()">〉</button>
-        <button class="join-item btn" @click="goLastPage()">»</button>
-      </div>
-
-    </div>
-  </div>
-</template>
-
-<style scoped>
-</style>

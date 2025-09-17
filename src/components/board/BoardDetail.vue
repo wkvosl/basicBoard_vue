@@ -56,7 +56,3 @@ function goList(){
 }
 
 </script>
-
-<style scoped>
-@import "@/assets/main.css";
-</style>
