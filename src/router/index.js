@@ -9,6 +9,10 @@ const routes = [
         path:'/',
         name:'home',
         component : Home,
+        meta:{
+            requiresAuth : false,
+            title:'작업중!'
+        }
     },
     {
         path:'/board/list',
@@ -31,5 +35,13 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+router.afterEach((to) => {
+    if(to.meta?.title){
+        document.title = to.meta.title
+    }else{
+        document.title = "(기본제목) 작업중!"
+    }
+})
 
 export default router;
