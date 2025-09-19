@@ -16,8 +16,8 @@
   </div>
 
     <div class="flex justify-end pt-6">
-      <button class="btn btn-primary" @click="goToList">목록</button>
       <button class="btn btn-primary ml-5" @click="goToModify">수정</button>
+      <button class="btn btn-primary ml-5" @click="goToList">목록</button>
     </div>
 
 
@@ -43,7 +43,6 @@ onMounted(async () => {
 
   if (window.history.state && window.history.state.preParam) {
     preParam = window.history.state.preParam;
-    console.log("전달받은 쿼리 데이터:", preParam);
   }
 });
 

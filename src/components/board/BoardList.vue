@@ -9,6 +9,16 @@
   <div class="card bg-base-100 shadow-md">
     <div class="card-body">
       <div class="overflow-x-auto">
+        <p v-if="isSearched" class="mb-3"> 검색한 게시물
+          <span class="text-blue-700 text-lg font-bold">{{pageInfo.totalElements}}</span>
+          /
+          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}} </span>
+          건
+        </p>
+        <p v-else class="mb-5"> 총 게시물
+          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}}</span>
+          건
+        </p>
         <div>
           <table class="table table-zebra">
             <thead>
@@ -72,6 +82,7 @@ const category = ref(route.query.category || "");
 
 // 게시글 목록
 const boards = ref([]);
+const isSearched = ref();
 
 // 페이지 정보
 const pageInfo = ref({
@@ -82,7 +93,8 @@ const pageInfo = ref({
   numberOfElements: 0,
   first: true,
   last: false,
-  empty: true
+  empty: true,
+  boardTotal:0
 });
 
 // totalPages 만큼 배열 생성 (v-for용)
@@ -108,6 +120,7 @@ async function loadBoards(pageNumber: number) {
   });
 
   const res = await fetchBoard(pageNumber, search.value, category.value);
+  isSearched.value = !!search.value || (category.value && category.value !== '전체');
   boards.value = res.content;
   pageInfo.value = res.page;
 }
