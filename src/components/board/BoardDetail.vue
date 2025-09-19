@@ -16,6 +16,7 @@
   </div>
 
     <div class="flex justify-end pt-6">
+      <button class="btn btn-secondary ml-5" @click="goToDelete">삭제</button>
       <button class="btn btn-primary ml-5" @click="goToModify">수정</button>
       <button class="btn btn-primary ml-5" @click="goToList">목록</button>
     </div>
@@ -27,7 +28,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { fetchBoardById } from "@/api/board";
+import { fetchBoardById, fetchDeleteById} from "@/api/board";
 
 const route = useRoute();
 const router = useRouter();
@@ -58,6 +59,26 @@ function goToModify(){
     name:'boardModify',
     state: {'preParam':preParam}
   })
+}
+
+async function goToDelete() {
+
+  try {
+    const status = await fetchDeleteById(board.value);
+
+    if(status === 200){
+      alert("게시물이 삭제되었습니다.");
+      await router.push({
+        name: 'boardList',
+        query: preParam
+      });
+    }else{
+      alert("삭제할 게시물이 없습니다.");
+    }
+
+  }catch (err){
+    alert("삭제 중 오류가 발생했습니다.");
+  }
 }
 
 </script>

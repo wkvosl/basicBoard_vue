@@ -23,3 +23,9 @@ export async function fetchBoardSave(payload){
     const res = await api.post("/board/save", payload);
     return res.data;
 }
+
+export async function fetchDeleteById(boards){
+    const res = await api.post("/board/delete", boards);
+    console.log(boards)
+    return res.status;
+}
