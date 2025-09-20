@@ -1,6 +1,11 @@
 
 <template>
 
+  <div v-if="showPopup">
+    <BoardDetail :boardNo="selectBoardNo" :showPopup="showPopup"
+    @update:showPopup="showPopup = $event"/>
+  </div>
+
   <BoardSearch
       v-model:keyword="search"
       v-model:searchCategory="category"
@@ -8,45 +13,53 @@
 
   <div class="card bg-base-100 shadow-md">
     <div class="card-body">
-      <div class="overflow-x-auto">
-        <p v-if="isSearched" class="mb-3"> 검색한 게시물
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.totalElements}}</span>
-          /
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}} </span>
-          건
-        </p>
-        <p v-else class="mb-5"> 총 게시물
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}}</span>
-          건
-        </p>
-        <div>
-          <table class="table table-zebra">
-            <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>내용</th>
-              <th>작성자</th>
-              <th>작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(board,i) in boards" :key="board.boardNo">
-              <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
-              <td>
-                <button @click="goToDetail(board.boardNo)">
-                  {{ board.boardTitle }}
-                </button>
-              </td>
-              <td>{{board.boardContent}}</td>
-              <td>{{board.boardWriter}}</td>
-              <td>{{board.regDate}}</td>
-            </tr>
-            </tbody>
-          </table>
+      <!-- 상단 안내 문구 -->
+      <p v-if="isSearched" class="mb-3">
+        검색한 게시물
+        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.totalElements }}</span>
+        /
+        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
+        건
+      </p>
+      <p v-else class="mb-5">
+        총 게시물
+        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
+        건
+      </p>
+
+      <!-- 방명록 카드 리스트 -->
+      <div class="space-y-4">
+        <div
+            v-for="(board, i) in boards"
+            :key="board.boardNo"
+            class="border border-base-300 rounded-xl p-4 shadow-sm hover:shadow-md transition"
+        >
+          <!-- 제목 -->
+          <div class="flex items-center justify-between mb-2">
+<!--            @click="goToDetail(board.boardNo)"-->
+            <button
+
+                @click="showDetailPopup(board.boardNo)"
+                class="font-semibold text-lg text-blue-600 hover:underline"
+            >
+              {{ i + 1 + (pageInfo.number - 1) * pageInfo.size }}. {{ board.boardTitle }}
+            </button>
+            <span class="text-sm text-gray-500">{{ board.regDate }}</span>
+          </div>
+
+          <!-- 내용 -->
+          <p class="text-gray-700 mb-3">
+            {{ board.boardContent }}
+          </p>
+
+          <!-- 작성자 -->
+          <div class="text-sm text-gray-500">
+            ✍️ {{ board.boardWriter }}
+          </div>
         </div>
       </div>
 
+      <!-- 페이지네이션 -->
       <div class="join justify-center pt-6">
         <button class="join-item btn" @click="goFirstPage()">«</button>
         <button class="join-item btn" @click="goPrevPage()">〈</button>
@@ -64,14 +77,16 @@
 
     </div>
   </div>
+
 </template>
 
 
-<script setup lang="ts">
+<script setup>
 import {computed, onMounted, ref, watch} from "vue";
 import {fetchBoard} from "@/api/board";
 import {useRoute, useRouter} from "vue-router";
 import BoardSearch from "@/components/board/BoardSearch.vue";
+import BoardDetail from "@/components/board/BoardDetail.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -108,7 +123,7 @@ const currentPage = computed(() => {
 });
 
 // 페이지 이동// 데이터 호출 및 라우터 쿼리 동기화
-async function loadBoards(pageNumber: number) {
+async function loadBoards(pageNumber) {
   // 쿼리 파라미터를 업데이트하여 URL에 페이지 번호를 반영합니다.
   await router.push({
     name: "boardList",
@@ -124,7 +139,7 @@ async function loadBoards(pageNumber: number) {
   boards.value = res.content;
   pageInfo.value = res.page;
 }
-function goPage(pageNumber: number) {
+function goPage(pageNumber) {
   loadBoards(pageNumber);
 }
 
@@ -159,13 +174,21 @@ watch(
 );
 
 //상세페이지 이동
-function goToDetail(boardId) {
-  router.push({
-    name: 'boardDetail',
-    params: { id: boardId },
-    state: { preParam: route.query }
-  });
+// function goToDetail(boardId) {
+//   router.push({
+//     name: 'boardDetail',
+//     params: { id: boardId },
+//     state: { preParam: route.query }
+//   });
+// }
+
+const showPopup = ref(false);
+const selectBoardNo = ref(0);
+function showDetailPopup(boardNo){
+  selectBoardNo.value = boardNo
+  showPopup.value = true;
 }
+
 
 </script>
 
