@@ -5,7 +5,7 @@ export async function fetchBoard(pageNumber = 1, keyword, category){
 
     if(pageNumber){
         params.page = pageNumber;
-        params.size = 10;
+        params.size = 5;
         params.search = keyword;
         params.category = category
     }

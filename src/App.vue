@@ -1,28 +1,22 @@
-<script>
+<script setup>
 
-import Nav from "@/components/Nav.vue";
-import Footer from "@/components/layout/Footer.vue";
+import {useRoute} from "vue-router";
+import {computed} from "vue";
+import MainLayout from "@/components/layout/MainLayout.vue";
 
-
-export default {
-  components:{
-    Footer,
-    Nav,
-  }
-}
+const route = useRoute()
+const layout = computed(()=>{
+  return route.meta.layout || MainLayout
+})
 
 </script>
 
 <template>
 
-  <Nav></Nav>
-  <div class="flex justify-center">
-    <div class="w-4/5 min-w-fit">
-      <router-view :key="$route.fullPath"></router-view>
-    </div>
-  </div>
+  <component :is="layout">
+    <RouterView/>
+  </component>
 
-  <Footer />
 
 </template>
 
