@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import {useRouter} from 'vue-router';
 
-const router = useRouter();
-
-const goToBoardList = () => {
-  router.push({ name : 'boardList' });
-};
-
-const goToGalleryList = () => {
-  router.push({ name : 'galleryList'})
-}
 </script>
 
 <template>

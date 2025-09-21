@@ -37,7 +37,6 @@ import Nav from "@/components/layout/Nav.vue";
 
 .content {
   grid-row: 2;
-  //padding: 20px;
 }
 
 .footer {
