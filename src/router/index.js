@@ -27,6 +27,13 @@ const routes = [
         }
     },
     {
+        path:'/board/create', name:'boardCreate',
+        component: ()=> import('@/components/board/BoardCreate.vue'),
+        meta:{
+            layout : ContentLayout
+        }
+    },
+    {
         path:'/board/modify/:id', name:'boardModify',
         component: ()=>import('@/components/board/BoardModify.vue'),
         meta:{
@@ -50,6 +57,13 @@ const routes = [
     {
         path:'/gallery/modify/:id', name:'galleryModify',
         component: ()=>import('@/components/gallery/GalleryModify.vue'),
+        meta:{
+            layout : ContentLayout
+        }
+    },
+    {
+        path:'/gallery/create', name:'galleryCreate',
+        component: ()=> import('@/components/gallery/GalleryCreate.vue'),
         meta:{
             layout : ContentLayout
         }

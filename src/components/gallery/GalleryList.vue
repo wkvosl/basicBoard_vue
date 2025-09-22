@@ -4,7 +4,7 @@
   <GallerySearch
       v-model:keyword="search"
       v-model:searchCategory="category"
-      @doSearch="loadBoards(1)"/>
+      @doSearch="loadGallery(1)"/>
 
   <div class="card bg-base-100 shadow-md">
     <div class="card-body">
@@ -20,6 +20,9 @@
           건
         </p>
         <div>
+          <div>
+            <button class="btn btn-neutral btn-md" @click="goToCreate">등록</button>
+          </div>
           <table class="table table-zebra">
             <thead>
             <tr>
@@ -31,16 +34,16 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(board,i) in boards" :key="board.boardNo">
+            <tr v-for="(gallery,i) in gallerys" :key="gallery.galleryNo">
               <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
               <td>
-                <button @click="goToDetail(board.boardNo)">
-                  {{ board.boardTitle }}
+                <button @click="goToDetail(gallery.galleryNo)">
+                  {{ gallery.galleryTitle }}
                 </button>
               </td>
-              <td>{{board.boardContent}}</td>
-              <td>{{board.boardWriter}}</td>
-              <td>{{board.regDate}}</td>
+              <td>{{gallery.galleryContent}}</td>
+              <td>{{gallery.galleryWriter}}</td>
+              <td>{{gallery.regDate}}</td>
             </tr>
             </tbody>
           </table>
@@ -64,24 +67,24 @@
 
     </div>
   </div>
+
 </template>
 
 
 <script setup>
 import {computed, onMounted, ref, watch} from "vue";
-import {fetchBoard} from "@/api/board";
 import {useRoute, useRouter} from "vue-router";
 import GallerySearch from "@/components/gallery/GallerySearch.vue";
+import {fetchGallery} from "@/api/gallery.js";
 
 const route = useRoute();
 const router = useRouter();
-
 
 const search = ref(route.query.search || "");
 const category = ref(route.query.category || "");
 
 // 게시글 목록
-const boards = ref([]);
+const gallerys = ref([]);
 const isSearched = ref();
 
 // 페이지 정보
@@ -108,7 +111,7 @@ const currentPage = computed(() => {
 });
 
 // 페이지 이동// 데이터 호출 및 라우터 쿼리 동기화
-async function loadBoards(pageNumber) {
+async function loadGallery(pageNumber) {
   // 쿼리 파라미터를 업데이트하여 URL에 페이지 번호를 반영합니다.
   await router.push({
     name: "galleryList",
@@ -119,34 +122,34 @@ async function loadBoards(pageNumber) {
     }
   });
 
-  const res = await fetchBoard(pageNumber, search.value, category.value);
+  const res = await fetchGallery(pageNumber, search.value, category.value);
   isSearched.value = !!search.value || (category.value && category.value !== '전체');
-  boards.value = res.content;
+  gallerys.value = res.content;
   pageInfo.value = res.page;
 }
 function goPage(pageNumber) {
-  loadBoards(pageNumber);
+  loadGallery(pageNumber);
 }
 
 function goFirstPage() {
-  if (!pageInfo.value.first) loadBoards(1);
+  if (!pageInfo.value.first) loadGallery(1);
 }
 
 function goPrevPage() {
-  if (!pageInfo.value.first) loadBoards(pageInfo.value.number -1);
+  if (!pageInfo.value.first) loadGallery(pageInfo.value.number -1);
 }
 
 function goNextPage() {
-  if (!pageInfo.value.last) loadBoards(pageInfo.value.number + 1);
+  if (!pageInfo.value.last) loadGallery(pageInfo.value.number + 1);
 }
 
 function goLastPage() {
-  if (!pageInfo.value.last) loadBoards(pageInfo.value.totalPages);
+  if (!pageInfo.value.last) loadGallery(pageInfo.value.totalPages);
 }
 
 // 최초 로드 시, URL의 페이지 번호에 따라 데이터를 가져옵니다.
 onMounted(() => {
-  loadBoards(currentPage.value);
+  loadGallery(currentPage.value);
 });
 
 // URL의 쿼리 파라미터가 변경될 때마다 데이터를 다시 불러옵니다.
@@ -154,15 +157,21 @@ watch(
     () => route.query.page,
     (newPage) => {
       // 쿼리가 변경되면, 새 페이지 번호로 데이터를 다시 로드합니다.
-      loadBoards(Number(newPage) || 1);
+      loadGallery(Number(newPage) || 1);
     },
 );
 
+function goToCreate(){
+  router.push({
+    name:'galleryCreate'
+  })
+}
+
 //상세페이지 이동
-function goToDetail(boardId) {
+function goToDetail(galleryId) {
   router.push({
     name: 'galleryDetail',
-    params: { id: boardId },
+    params: { id: galleryId },
     state: { preParam: route.query }
   });
 }
