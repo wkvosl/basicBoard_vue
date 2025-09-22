@@ -6,6 +6,7 @@ import {useRoute, useRouter} from "vue-router";
 import BoardSearch from "@/components/board/BoardSearch.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardModify from "@/components/board/BoardModify.vue";
+import BoardCreate from "@/components/board/BoardCreate.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -94,9 +95,19 @@ watch(
 
 // 팝업
 const selectBoardNo = ref(0);
+const showCreate = ref(false);
 const showDetail = ref(false);
 const showModify = ref(false);
 
+function showCreatePopup(){
+  showCreate.value = true;
+}
+function closeCreate() {
+  showCreate.value = false;
+}
+function createSaved(){
+  showCreate.value = false;
+}
 function showDetailPopup(boardNo){
   selectBoardNo.value = boardNo
   showDetail.value = true;
@@ -121,6 +132,14 @@ function afterSaved(boardNo) {
 </script>
 
 <template>
+
+    <BoardCreate
+      v-if="showCreate"
+      @close="closeCreate"
+      @openCreate = "showCreatePopup"
+      @createSaved = "createSaved"
+      @refreshBoardList="loadBoards"
+    />
 
     <BoardDetail
         v-if="showDetail"
@@ -158,6 +177,9 @@ function afterSaved(boardNo) {
         <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
         건
       </p>
+      <div>
+        <button class="btn btn-neutral btn-md" @click="showCreatePopup">등록</button>
+      </div>
 
       <!-- 방명록 카드 리스트 -->
       <div class="space-y-4">
