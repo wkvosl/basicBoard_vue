@@ -54,6 +54,12 @@ const routes = [
             layout : ContentLayout
         }
     },
+    {
+        path:'/file/save', name:'file',
+        component: ()=>import('@/components/file.vue'),
+        meta:{
+        }
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),

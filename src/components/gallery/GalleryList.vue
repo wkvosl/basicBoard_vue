@@ -48,8 +48,8 @@
       </div>
 
       <div class="join justify-center pt-6">
-        <button class="join-item btn" @click="goFirstPage()">«</button>
-        <button class="join-item btn" @click="goPrevPage()">〈</button>
+        <button class="join-item btn" :disabled="pageInfo.first" @click="goFirstPage()">«</button>
+        <button class="join-item btn" :disabled="pageInfo.first" @click="goPrevPage()">〈</button>
         <button
             class="join-item btn"
             v-for="page in totalPagesArray"
@@ -58,8 +58,8 @@
             :class="{ 'btn-active': page === currentPage }">
           {{page}}
         </button>
-        <button class="join-item btn" @click="goNextPage()">〉</button>
-        <button class="join-item btn" @click="goLastPage()">»</button>
+        <button class="join-item btn" :disabled="pageInfo.last" @click="goNextPage()">〉</button>
+        <button class="join-item btn" :disabled="pageInfo.last" @click="goLastPage()">»</button>
       </div>
 
     </div>
