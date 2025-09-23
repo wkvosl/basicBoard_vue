@@ -1,10 +1,20 @@
 import {fileApi} from "@/api/basicApi.js";
 
-export async function fetchFileSave(file){
+export async function fetchFileSave(files){
 
     const formData = new FormData();
-    formData.append("file", file);
+    for (let i = 0; i < files.value.length; i++) {
+        formData.append("files", files.value[i].raw)
+    }
 
     const res = await fileApi.post(`/file/save`, formData);
-    return res.data;
+
+    const data = res.data;
+    console.log(data)
+
+    data.forEach((item, idx) => {
+        files.value[idx].fileId = item.fileId;
+    });
+
+    return data;
 }

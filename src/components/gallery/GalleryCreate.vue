@@ -21,15 +21,21 @@
             <input class="input" v-model="gallery.galleryWriter">
           </td>
         </tr>
+        <tr>
+          <th>첨부파일</th>
+          <td>
+            <File
+              :galleryNo = "gallery.galleryNo"
+              @fileNo = "gallery.attachFileNo"
+            />
+          </td>
+        </tr>
       </table>
     </div>
-
 
     <div v-else class="card-body justify-center items-center" >
       <span class="loading loading-spinner text-success"></span>
     </div>
-
-
 
   </div>
 
@@ -45,6 +51,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import {fetchGallerySave} from "@/api/gallery.js";
+import File from "@/components/file.vue";
 
 const router = useRouter();
 
@@ -53,6 +60,7 @@ const gallery = ref({
   galleryTitle: "",
   galleryContent: "",
   galleryWriter:"",
+  attachFileNo:null,
   delYn:"N",
 });
 
@@ -83,4 +91,22 @@ function goToList(){
         query: preParam
       });
 }
+
+//파일첨부 1개
+const isSaved = false;
+// function onFileChange(event) {
+//   file.value = event.target.files[0];
+//   fileSave(file);
+// }
+// function fileSave(file){
+//   try{
+//     const res = fetchFileSave(file);
+//     alert("파일이 등록 되었습니다." + res.attachFileNo);
+//   }catch (err){
+//     alert("파일 등록에 실패");
+//     console.log("파일 등록에 실패"+err);
+//   }
+//
+//
+// }
 </script>
