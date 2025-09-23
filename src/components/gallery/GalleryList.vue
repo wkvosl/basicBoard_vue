@@ -9,44 +9,49 @@
   <div class="card bg-base-100 shadow-md">
     <div class="card-body">
       <div class="overflow-x-auto">
-        <p v-if="isSearched" class="mb-3"> 검색한 게시물
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.totalElements}}</span>
+        <p v-if="isSearched" class="mb-3">
+          검색한 게시물
+          <span class="text-blue-700 text-lg font-bold">{{ pageInfo.totalElements }}</span>
           /
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}} </span>
+          <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
           건
         </p>
-        <p v-else class="mb-5"> 총 게시물
-          <span class="text-blue-700 text-lg font-bold">{{pageInfo.boardTotal}}</span>
+        <p v-else class="mb-5">
+          총 게시물
+          <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
           건
         </p>
-        <div>
-          <div>
-            <button class="btn btn-neutral btn-md" @click="goToCreate">등록</button>
+
+        <div class="flex justify-end mb-4">
+          <button class="btn btn-neutral btn-md" @click="goToCreate">등록</button>
+        </div>
+
+        <!-- 갤러리 영역 -->
+        <div
+            class="grid gap-4"
+            :class="{
+      'grid-cols-1': true,
+      'sm:grid-cols-2': true,
+      'md:grid-cols-2': true,
+      'lg:grid-cols-3': true,
+      'xl:grid-cols-4': true
+    }"
+        >
+          <div
+              v-for="gallery in gallerys"
+              :key="gallery.galleryNo"
+              class="card bg-base-100 shadow-md hover:shadow-xl transition cursor-pointer"
+              @click="goToDetail(gallery.galleryNo)"
+          >
+            <div class="card-body">
+              <h2 class="card-title line-clamp-1">{{ gallery.galleryTitle }}</h2>
+              <p class="line-clamp-2 text-sm text-gray-600">{{ gallery.galleryContent }}</p>
+              <div class="mt-2 text-xs text-gray-500">
+                <span class="mr-2">{{ gallery.galleryWriter }}</span>
+                <span>{{ gallery.regDate }}</span>
+              </div>
+            </div>
           </div>
-          <table class="table table-zebra">
-            <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>내용</th>
-              <th>작성자</th>
-              <th>작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(gallery,i) in gallerys" :key="gallery.galleryNo">
-              <td>{{i + 1 + (pageInfo.number -1 ) * pageInfo.size }}</td>
-              <td>
-                <button @click="goToDetail(gallery.galleryNo)">
-                  {{ gallery.galleryTitle }}
-                </button>
-              </td>
-              <td>{{gallery.galleryContent}}</td>
-              <td>{{gallery.galleryWriter}}</td>
-              <td>{{gallery.regDate}}</td>
-            </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 

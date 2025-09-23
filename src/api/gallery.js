@@ -5,7 +5,7 @@ export async function fetchGallery(pageNumber = 1, keyword, category){
 
     if(pageNumber){
         params.page = pageNumber;
-        params.size = 5;
+        params.size = 10;
         params.search = keyword;
         params.category = category
     }

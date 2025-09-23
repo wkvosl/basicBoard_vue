@@ -1,29 +1,27 @@
 
 <template xmlns="http://www.w3.org/1999/html">
   <div class="card bg-base-100 shadow-md">
-    <div v-if="board" class="card-body">
-      <p>작성자 : {{board.boardWriter}}</p>
+    <div v-if="gallery" class="card-body">
+      <p>작성자 : {{gallery.galleryWriter}}</p>
       <table>
         <tr>
           <th>제목</th>
           <td>
-            <input class="input" v-model="board.boardTitle">
+            <input class="input" v-model="gallery.galleryTitle">
           </td>
         </tr>
         <tr>
           <th>내용</th>
           <td>
-            <input class="input" v-model="board.boardContent">
+            <input class="input" v-model="gallery.galleryContent">
           </td>
         </tr>
       </table>
     </div>
 
-
     <div v-else class="card-body justify-center items-center" >
       <span class="loading loading-spinner text-success"></span>
     </div>
-
 
 
   </div>
@@ -40,15 +38,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {fetchBoardById, fetchBoardSave} from "@/api/board";
+import {fetchGalleryById, fetchGallerySave} from "@/api/gallery.js";
 
 const route = useRoute();
 const router = useRouter();
 
-const board = ref({
-  boardNo: null,
-  boardTitle: "",
-  boardContent: "",
+const gallery = ref({
+  galleryNo: null,
+  galleryTitle: "",
+  galleryContent: "",
+  galleryWriter: "",
   lastUpdateUser: null,
 });
 
@@ -57,7 +56,7 @@ let preParam = history.state.preParam;
 
 onMounted(async () => {
   const id = route.params.id;
-  board.value = await fetchBoardById(id);
+  gallery.value = await fetchGalleryById(id);
 });
 
 const save = async () => {
@@ -65,16 +64,17 @@ const save = async () => {
 
 
   const payload = {
-    boardNo: board.value.boardNo,
-    boardTitle: board.value.boardTitle,
-    boardContent: board.value.boardContent,
-    regUser: board.value.regUser,
-    regDate: board.value.regDate,
-    delYn:board.value.delYn,
+    galleryNo: gallery.value.galleryNo,
+    galleryTitle: gallery.value.galleryTitle,
+    galleryContent: gallery.value.galleryContent,
+    regUser: gallery.value.regUser,
+    regDate: gallery.value.regDate,
+    delYn:gallery.value.delYn,
     lastUpdateUser: "testUser",
   };
 console.log(payload)
-  await fetchBoardSave(payload);
+  await fetchGallerySave(payload);
+    goToBack();
     alert("저장 성공");
   }catch (err){
     alert("저장 오류");
@@ -83,7 +83,7 @@ console.log(payload)
 
 function goToBack(){
   router.push({
-    name:'boardDetail',
+    name:'galleryDetail',
     state: {'preParam' : preParam}
   })
 }
@@ -91,7 +91,7 @@ function goToBack(){
 function goToList(){
   router.push(
       {
-        name:'boardList',
+        name:'galleryList',
         query: preParam
       });
 }
