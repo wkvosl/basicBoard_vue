@@ -1,6 +1,5 @@
 <script setup>
 
-import Footer from "@/components/layout/Footer.vue";
 import Nav from "@/components/layout/Nav.vue";
 </script>
 
@@ -15,10 +14,6 @@ import Nav from "@/components/layout/Nav.vue";
     <main class="content">
       <RouterView />
     </main>
-
-    <footer class="footer">
-      <Footer />
-    </footer>
 
   </div>
 </template>
@@ -39,7 +34,4 @@ import Nav from "@/components/layout/Nav.vue";
   grid-row: 2;
 }
 
-.footer {
-  grid-row: 3;
-}
 </style>

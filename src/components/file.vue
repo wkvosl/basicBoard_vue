@@ -17,6 +17,7 @@ function onFileChange(event) {
   }))
 
   console.log("선택된 파일들: " + files.value.map(f => f.raw.name));
+  saveFile();
 }
 
 async function saveFile() {
@@ -40,11 +41,12 @@ async function saveFile() {
 
 <template>
 
-  <input type="file" @change="onFileChange" multiple>
-  <ul>
-    <li v-for="f in files" :key="f.name">{{ f.name }}</li>
-  </ul>
-  <button @click="saveFile">저장</button>
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Pick a file</legend>
+    <input type="file" class="file-input"  @change="onFileChange" multiple/>
+    <label class="label">Max size 2MB</label>
+
+  </fieldset>
 
 </template>
 

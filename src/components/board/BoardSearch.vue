@@ -48,7 +48,6 @@ function resetSearch(){
         <button class="btn btn-primary btn-md	" @click="resetSearch">초기화</button>
       </div>
     </div>
-    <!--    </div>-->
   </div>
 </template>
 

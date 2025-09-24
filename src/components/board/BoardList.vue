@@ -59,6 +59,7 @@ async function loadBoards(pageNumber) {
   boards.value = res.content;
   pageInfo.value = res.page;
 }
+
 function goPage(pageNumber) {
   loadBoards(pageNumber);
 }
@@ -95,19 +96,9 @@ watch(
 
 // 팝업
 const selectBoardNo = ref(0);
-const showCreate = ref(false);
 const showDetail = ref(false);
 const showModify = ref(false);
 
-function showCreatePopup(){
-  showCreate.value = true;
-}
-function closeCreate() {
-  showCreate.value = false;
-}
-function createSaved(){
-  showCreate.value = false;
-}
 function showDetailPopup(boardNo){
   selectBoardNo.value = boardNo
   showDetail.value = true;
@@ -133,14 +124,6 @@ function afterSaved(boardNo) {
 
 <template>
 
-    <BoardCreate
-      v-if="showCreate"
-      @close="closeCreate"
-      @openCreate = "showCreatePopup"
-      @createSaved = "createSaved"
-      @refreshBoardList="loadBoards"
-    />
-
     <BoardDetail
         v-if="showDetail"
         :boardNo="selectBoardNo"
@@ -156,82 +139,89 @@ function afterSaved(boardNo) {
         @modifySaved="afterSaved"
     />
 
+
+  <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+  <div class="flex flex-col min-h-screen">
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold tracking-tight">Guest Book</h2>
+          <p class="mt-2 text-text-muted-light dark:text-text-muted-dark">Share your thoughts and connect with others.</p>
+        </div>
+          <BoardCreate @refreshBoardList="loadBoards"/>
+
+        <h3 class="text-2xl font-bold tracking-tight mb-6">Recent Posts</h3>
+        <div class="space-y-6" v-for="board in boards">
+          <div class="flex items-start gap-4 bg-content-light dark:bg-content-dark p-5 rounded-xl shadow-sm hover:bg-gray-100 transition-colors"
+               @click="showDetailPopup(board.boardNo)">
+            <img alt="Alex's avatar" class="h-12 w-12 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkj_VVDARP5hbes1IDYxIvDk_wIm_t9N8KPAbKC_WCDBrTCXY2y4hVVpUqUe2rXJpTIei7jgB_Ys1Vzvpu5CJ8xoXIOv16BNN5FJJQuF9ODJv-PfyYylqfNfuz1OVKxYOCpv3jPLU-vnKePEBJxIuC6hWGpkh6ZffBFJXo5JXbhJWkYLFhD4CdVsFA85cPNYZ91H0GPljMNQcbSsGteahwmEaTSc4hdqnFeYOdboiJ3yec_dh44uBX6b1xVk0G5bocHLs5u-eC95c"/>
+            <div class="flex-1">
+              <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">
+                {{board.boardContent}}
+              </p>
+              <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2">Posted by {{board.regUser}} on {{board.regDate}}</p>
+            </div>
+          </div>
+
+        </div>
+        <nav aria-label="Pagination" class="flex items-center justify-center gap-2 mt-8">
+          <button class="flex items-center justify-center h-9 w-9 rounded-lg text-text-muted-light
+          dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors
+          disabled:opacity-50 "
+                  :disabled="pageInfo.first" @click="goFirstPage">
+            <span class="material-symbols-outlined">first_page</span>
+          </button>
+          <button class="flex items-center justify-center h-9 w-9 rounded-lg text-text-muted-light
+          dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors
+          disabled:opacity-50 "
+                  :disabled="pageInfo.first" @click="goPrevPage">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button
+              class="join-item btn"
+              v-for="page in totalPagesArray"
+              :key="page"
+              @click="goPage(page)"
+              :class="page === currentPage ? 'pageBntAct': 'pageBnt'">
+            {{page}}
+          </button>
+          <button class="flex items-center justify-center h-9 w-9 rounded-lg text-text-muted-light
+            dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors
+            disabled:opacity-50 "
+                  :disabled="pageInfo.last" @click="goNextPage">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+          <button class="flex items-center justify-center h-9 w-9 rounded-lg text-text-muted-light
+            dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors
+            disabled:opacity-50 "
+                  :disabled="pageInfo.last" @click="goLastPage">
+            <span class="material-symbols-outlined">last_page</span>
+          </button>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  </body>
   <BoardSearch
       v-model:keyword="search"
       v-model:searchCategory="category"
       @doSearch="loadBoards(1)"
   />
 
-  <div class="card bg-base-100 shadow-md">
-    <div class="card-body">
-      <!-- 상단 안내 문구 -->
-      <p v-if="isSearched" class="mb-3">
-        검색한 게시물
-        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.totalElements }}</span>
-        /
-        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
-        건
-      </p>
-      <p v-else class="mb-5">
-        총 게시물
-        <span class="text-blue-700 text-lg font-bold">{{ pageInfo.boardTotal }}</span>
-        건
-      </p>
-      <div>
-        <button class="btn btn-neutral btn-md" @click="showCreatePopup">등록</button>
-      </div>
-
-      <!-- 방명록 카드 리스트 -->
-      <div class="space-y-4">
-        <div
-            v-for="(board, i) in boards"
-            :key="board.boardNo"
-            class="border border-base-300 rounded-xl p-4 shadow-sm hover:shadow-md transition"
-        >
-          <!-- 제목 -->
-          <div class="flex items-center justify-between mb-2">
-            <button
-
-                @click="showDetailPopup(board.boardNo)"
-                class="font-semibold text-lg text-blue-600 hover:underline"
-            >
-              {{ i + 1 + (pageInfo.number - 1) * pageInfo.size }}. {{ board.boardTitle }}
-            </button>
-            <span class="text-sm text-gray-500">{{ board.regDate }}</span>
-          </div>
-
-          <!-- 내용 -->
-          <p class="text-gray-700 mb-3">
-            {{ board.boardContent }}
-          </p>
-
-          <!-- 작성자 -->
-          <div class="text-sm text-gray-500">
-            ✍️ {{ board.boardWriter }}
-          </div>
-        </div>
-      </div>
-
-      <!-- 페이지네이션 -->
-      <div class="join justify-center pt-6">
-        <button class="join-item btn" :disabled="pageInfo.first" @click="goFirstPage()">«</button>
-        <button class="join-item btn" :disabled="pageInfo.first" @click="goPrevPage()">〈</button>
-        <button
-            class="join-item btn"
-            v-for="page in totalPagesArray"
-            :key="page"
-            @click="goPage(page)"
-            :class="{ 'btn-active': page === currentPage }">
-          {{page}}
-        </button>
-        <button class="join-item btn" :disabled="pageInfo.last" @click="goNextPage()">〉</button>
-        <button class="join-item btn" :disabled="pageInfo.last" @click="goLastPage()">»</button>
-      </div>
-
-    </div>
-  </div>
-
 </template>
 
-
+<style scoped>
+.pageBntAct {
+  font-weight: 700;
+  background-color: var(--color-primary);
+  color: white;
+}
+.pageBnt{
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>
 
