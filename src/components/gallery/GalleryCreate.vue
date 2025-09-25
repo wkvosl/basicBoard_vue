@@ -1,6 +1,7 @@
 
 <template xmlns="http://www.w3.org/1999/html">
   <div class="card bg-base-100 shadow-md">
+    <p>갤러리 등록</p>
     <div v-if="gallery" class="card-body">
       <table>
         <tr>
@@ -25,8 +26,7 @@
           <th>첨부파일</th>
           <td>
             <File
-              :galleryNo = "gallery.galleryNo"
-              @fileNo = "gallery.attachFileNo"
+              @fileIds = "handleFileIds"
             />
           </td>
         </tr>
@@ -67,15 +67,25 @@ const gallery = ref({
 //목록 쿼리
 let preParam = history.state.preParam;
 
+//파일첨부에서 업로드된 fileIds를 받아서 attachFileNo에 값 넣기
+function handleFileIds(fileIds){
+  gallery.value.attachFileNo = fileIds.join(",");
+  console.log("@@@ 부모한테 보내준 파일 아이디 잘 들어옴", gallery.value.attachFileNo);
+}
+
+//갤러리 저장
 const save = async () => {
   try{
   const payload = {
     galleryNo: gallery.value.galleryNo,
     galleryTitle: gallery.value.galleryTitle,
     galleryContent: gallery.value.galleryContent,
+    galleryWriter: gallery.value.galleryWriter,
     regUser: gallery.value.galleryWriter,
+    attachFileNo: gallery.value.attachFileNo,
     delYn:gallery.value.delYn,
   };
+
   await fetchGallerySave(payload);
     alert("저장 성공");
     goToList();
@@ -92,21 +102,4 @@ function goToList(){
       });
 }
 
-//파일첨부 1개
-const isSaved = false;
-// function onFileChange(event) {
-//   file.value = event.target.files[0];
-//   fileSave(file);
-// }
-// function fileSave(file){
-//   try{
-//     const res = fetchFileSave(file);
-//     alert("파일이 등록 되었습니다." + res.attachFileNo);
-//   }catch (err){
-//     alert("파일 등록에 실패");
-//     console.log("파일 등록에 실패"+err);
-//   }
-//
-//
-// }
 </script>

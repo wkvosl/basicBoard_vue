@@ -3,6 +3,9 @@ import {fetchFileSave} from '@/api/file'
 import {ref} from "vue";
 
 const files = ref([]);
+const emit = defineEmits(['fileIds']);
+
+let uploadedFileIds = ref([]);
 
 function onFileChange(event) {
   const selectedFiles = event.target.files
@@ -21,20 +24,15 @@ function onFileChange(event) {
 }
 
 async function saveFile() {
-
   if (!files.value.length) return
-
-  console.log("업로드할 파일들:", files.value)
-
-  // fetchFileSave 함수는 FormData에 files 배열을 넣을 수 있도록 수정 필요
-  const res = await fetchFileSave(files);
-  //array로 받아오는데
-  console.log("@@@결과"+res);
-  console.log("@@@결과 JSON", JSON.stringify(res));
-/*@@@결과[object Object],[object Object]
-  file.vue:32 @@@결과 JSON [{"fileId":48,"success":true},{"fileId":49,"success":true}]*/
-
-
+  try{
+    const res = await fetchFileSave(files);
+    uploadedFileIds = res.map(item => item.fileId);
+    emit('fileIds', uploadedFileIds);
+  }catch (e) {
+    alert('파일업로드 실패');
+    console.error(e);
+  }
 }
 
 </script>
@@ -44,8 +42,8 @@ async function saveFile() {
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Pick a file</legend>
     <input type="file" class="file-input"  @change="onFileChange" multiple/>
+    <span v-if="uploadedFileIds">{{files.map(f=>f.raw.name)}}</span>
     <label class="label">Max size 2MB</label>
-
   </fieldset>
 
 </template>
