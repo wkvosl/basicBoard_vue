@@ -44,6 +44,9 @@
               @click="goToDetail(gallery.galleryNo)"
           >
             <div class="card-body">
+              <img :src="gallery.files?.[0]?.resourcePathName || '/images/no-image.png'"
+                   :alt="gallery.files?.[0]?.originalFileName">
+                {{gallery.files?.[0]?.originalFileName}}
               <h2 class="card-title line-clamp-1">{{ gallery.galleryTitle }}</h2>
               <p class="line-clamp-2 text-sm text-gray-600">{{ gallery.galleryContent }}</p>
               <div class="mt-2 text-xs text-gray-500">

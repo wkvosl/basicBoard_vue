@@ -70,7 +70,7 @@ const routes = [
     },
     {
         path:'/file/save', name:'file',
-        component: ()=>import('@/components/file.vue'),
+        component: ()=>import('@/components/FileUpload.vue'),
         meta:{
         }
     },

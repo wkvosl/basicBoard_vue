@@ -25,7 +25,7 @@
         <tr>
           <th>첨부파일</th>
           <td>
-            <File
+            <FileUpload
               @fileIds = "handleFileIds"
             />
           </td>
@@ -51,7 +51,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import {fetchGallerySave} from "@/api/gallery.js";
-import File from "@/components/file.vue";
+import FileUpload from "@/components/FileUpload.vue";
 
 const router = useRouter();
 
