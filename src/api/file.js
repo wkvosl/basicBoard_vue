@@ -1,20 +1,23 @@
 import {fileApi} from "@/api/basicApi.js";
 
-export async function fetchFileSave(files){
+export async function fetchFileSave(fileList){
+
+    if (!fileList?.length) return [];
 
     const formData = new FormData();
-    for (let i = 0; i < files.value.length; i++) {
-        formData.append("files", files.value[i].raw)
-    }
+    fileList.forEach( f => formData.append('files', f.raw));
 
     const res = await fileApi.post(`/file/save`, formData);
 
-    const data = res.data;
+    const data = res.data || [];
     console.log(data)
 
-    data.forEach((item, idx) => {
-        files.value[idx].fileId = item.fileId;
-    });
-
     return data;
+}
+//    /file/update
+export async function fetchDeletUploadFiles(fileId) {
+        
+    const res = await fileApi.post(`/file/delete/${fileId}`);
+
+    return res.data;
 }

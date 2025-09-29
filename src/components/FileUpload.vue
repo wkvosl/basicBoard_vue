@@ -1,36 +1,64 @@
 <script setup>
-import {fetchFileSave} from '@/api/file'
-import {ref} from "vue";
+import {fetchFileSave, fetchDeletUploadFiles} from '@/api/file'
+import {ref, computed} from "vue";
 
 const files = ref([]);
 const emit = defineEmits(['fileIds']);
 
 let uploadedFileIds = ref([]);
+const hasFiles = computed(()=> uploadedFileIds.value.length > 0);
 
 function onFileChange(event) {
-  const selectedFiles = event.target.files
-  console.log(selectedFiles)
+  const selectedFiles = Array.from(event.target.files || []);
+  console.log(selectedFiles);
 
-  if(!selectedFiles) return;
+  if(!selectedFiles.length) return;
 
-  files.value = Array.from(selectedFiles).map(f=>({
+  const newFiles = selectedFiles.map(f => ({
     raw: f,
     fileId: null,
     galleryId: null
-  }))
+  }));
+
+  files.value.push(...newFiles);
 
   console.log("선택된 파일들: " + files.value.map(f => f.raw.name));
-  saveFile();
+  saveFile(newFiles);
 }
 
-async function saveFile() {
+async function saveFile(fileList) {
   if (!files.value.length) return
   try{
-    const res = await fetchFileSave(files);
-    uploadedFileIds = res.map(item => item.fileId);
-    emit('fileIds', uploadedFileIds);
+    const res = await fetchFileSave(fileList);
+
+    res.forEach((item, idx) => {
+      fileList[idx].fileId = item.fileId;
+    });
+
+    //uploadFileIds 업뎃
+    uploadedFileIds.value = files.value.map(f => f.fileId).filter(id => id != null);
+    emit('fileIds', uploadedFileIds.value);
   }catch (e) {
     alert('파일업로드 실패');
+    console.error(e);
+  }
+}
+
+//파일첨부 -> 1개 삭제 
+async function deleteUploadFile(fileId) {
+  if(!fileId) return;
+  try{
+  
+  //파일 삭제 (물리 삭제)
+  await fetchDeletUploadFiles(fileId);
+  
+  //files 배열, uploadFileIds 업뎃, 부모에게 전달
+  files.value = files.value.filter(f => f.fileId !== fileId);
+  uploadedFileIds.value = uploadedFileIds.value.filter(id => id !== fileId);
+  emit('fileIds', uploadedFileIds.value);
+
+  }catch(e){
+    alert('파일 삭제 실패');
     console.error(e);
   }
 }
@@ -42,7 +70,19 @@ async function saveFile() {
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Pick a file</legend>
     <input type="file" class="file-input"  @change="onFileChange" multiple/>
-    <span v-if="uploadedFileIds">{{files.map(f=>f.raw.name)}}</span>
+    
+    <span v-if="hasFiles">
+      <div v-for="f in files" :key="f.raw.name" class="flex">{{ f.raw.name }}
+        <div class="items-center">
+          <button class="btn btn-xs ml-5" @click="deleteUploadFile(f.fileId)">
+            <span class="material-symbols-outlined">
+              delete
+            </span>
+          </button>
+        </div>
+      </div>
+    </span>
+
     <label class="label">Max size 2MB</label>
   </fieldset>
 

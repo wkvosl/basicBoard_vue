@@ -4,32 +4,34 @@
     <p>갤러리 등록</p>
     <div v-if="gallery" class="card-body">
       <table>
-        <tr>
-          <th>제목</th>
-          <td>
-            <input class="input" v-model="gallery.galleryTitle">
-          </td>
-        </tr>
-        <tr>
-          <th>내용</th>
-          <td>
-            <input class="input" v-model="gallery.galleryContent">
-          </td>
-        </tr>
-        <tr>
-          <th>작성자</th>
-          <td>
-            <input class="input" v-model="gallery.galleryWriter">
-          </td>
-        </tr>
-        <tr>
-          <th>첨부파일</th>
-          <td>
-            <FileUpload
-              @fileIds = "handleFileIds"
-            />
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>제목</th>
+            <td>
+              <input class="input" v-model="gallery.galleryTitle">
+            </td>
+          </tr>
+          <tr>
+            <th>내용</th>
+            <td>
+              <input class="input" v-model="gallery.galleryContent">
+            </td>
+          </tr>
+          <tr>
+            <th>작성자</th>
+            <td>
+              <input class="input" v-model="gallery.galleryWriter">
+            </td>
+          </tr>
+          <tr>
+            <th>첨부파일</th>
+            <td>
+              <FileUpload
+                @fileIds = "handleFileIds"
+              />
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
