@@ -3,6 +3,8 @@ import {fetchFileSave, fetchDeletUploadFiles} from '@/api/file'
 import {ref, computed} from "vue";
 
 const files = ref([]);
+const fileInput = ref(null);
+
 const emit = defineEmits(['fileIds']);
 
 let uploadedFileIds = ref([]);
@@ -13,6 +15,12 @@ function onFileChange(event) {
   console.log(selectedFiles);
 
   if(!selectedFiles.length) return;
+
+  if (files.value.length + selectedFiles.length > 5) {
+    alert("파일은 최대 5개까지 첨부할 수 있습니다.");
+    clearFiles();
+    return;
+  }
 
   const newFiles = selectedFiles.map(f => ({
     raw: f,
@@ -26,9 +34,17 @@ function onFileChange(event) {
   saveFile(newFiles);
 }
 
+const clearFiles = () => {
+ if (fileInput.value) {
+    fileInput.value.value = ''
+  } 
+}
+
 async function saveFile(fileList) {
   if (!files.value.length) return
   try{
+
+    console.log("파일보내기~", fileList );
     const res = await fetchFileSave(fileList);
 
     res.forEach((item, idx) => {
@@ -69,7 +85,7 @@ async function deleteUploadFile(fileId) {
 
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Pick a file</legend>
-    <input type="file" class="file-input"  @change="onFileChange" multiple/>
+    <input type="file" class="file-input" ref="fileInput"  @change="onFileChange" multiple/>
     
     <span v-if="hasFiles">
       <div v-for="f in files" :key="f.raw.name" class="flex">{{ f.raw.name }}
