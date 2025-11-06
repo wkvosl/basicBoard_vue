@@ -2,11 +2,19 @@
 
 
 import {useRouter} from "vue-router";
+import { useUserStore } from '@/stores/user'
+import SignUp from "../account/SignUp.vue";
+
 
 const router = useRouter();
+const userStore = useUserStore()
 
 function goToHome(){
   router.push({ name:'home' });
+}
+
+const logout = () => {
+  userStore.logout()
 }
 </script>
 
@@ -33,13 +41,16 @@ function goToHome(){
           <span class="material-symbols-outlined">account_circle</span>
         </button>
       </div>
-
+      <!--todo: 로그인 안하고 boardList일경우-->
       <div class="flex items-center gap-2">
-        <button class="px-4 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors">
-          Sign Up
+        <button v-if="!userStore.isLoggedIn" class="px-4 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors">
+          <RouterLink :to="{name:'signUp'}">Sign Up</RouterLink>
         </button>
-        <button class="px-4 py-2 text-sm font-bold bg-primary/10 dark:bg-primary/20 text-primary rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+        <button v-if="!userStore.isLoggedIn" class="px-4 py-2 text-sm font-bold bg-primary/10 dark:bg-primary/20 text-primary rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
           Login
+        </button>
+        <button v-if="userStore.isLoggedIn" @click="logout" class="btn">
+          로그아웃 ({{ userStore.nickname }})
         </button>
       </div>
     </div>

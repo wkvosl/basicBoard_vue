@@ -6,6 +6,9 @@
       <p>{{gallery.galleryContent}}</p>
       <p>{{gallery.galleryWriter}}</p>
       <p>{{gallery.regDate}}</p>
+      <img v-for="file in gallery.files" 
+        :src="file.resourcePathName" 
+        :alt="file.originalFileName"/>
     </div>
     <div v-else class="card-body justify-center items-center" >
       <span class="loading loading-spinner text-success"></span>

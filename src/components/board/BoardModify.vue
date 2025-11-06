@@ -6,18 +6,20 @@
       <div v-if="board" class="card-body justify-center">
         <span>작성자 : {{board.boardWriter}}</span>
         <table>
-          <tr>
-            <th>제목</th>
-            <td>
-              <input class="input" v-model="board.boardTitle">
-            </td>
-          </tr>
-          <tr>
-            <th>내용</th>
-            <td>
-              <input class="input" v-model="board.boardContent">
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>제목</th>
+              <td>
+                <input class="input" v-model="board.boardTitle">
+              </td>
+            </tr>
+            <tr>
+              <th>내용</th>
+              <td>
+                <input class="input" v-model="board.boardContent">
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
 

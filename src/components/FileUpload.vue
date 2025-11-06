@@ -1,12 +1,21 @@
 <script setup>
 import {fetchFileSave, fetchDeletUploadFiles} from '@/api/file'
-import {ref, computed} from "vue";
+import {ref, computed, watch} from "vue";
 
 const files = ref([]);
 const fileInput = ref(null);
 
-const emit = defineEmits(['fileIds']);
+const emit = defineEmits(['fileIds', 'newUploadFiles']);
 
+//파일 제한 갯수, galleryModify.vue에서 받아옴
+const props = defineProps(['fileCnt', 'modifyGalleryId','uploadedFileTotalCnt']);
+
+const maxUploadCont = computed(()=>props.fileCnt || props.uploadedFileTotalCnt);
+watch(() => props.fileCnt, (newVal) => {
+  console.log("@@파일업로드 뷰에서 fileCnt: ", newVal);
+}, { immediate: true });
+
+//업로드된 파일ids
 let uploadedFileIds = ref([]);
 const hasFiles = computed(()=> uploadedFileIds.value.length > 0);
 
@@ -16,22 +25,24 @@ function onFileChange(event) {
 
   if(!selectedFiles.length) return;
 
-  if (files.value.length + selectedFiles.length > 5) {
+  if (files.value.length + selectedFiles.length > maxUploadCont.value) {
     alert("파일은 최대 5개까지 첨부할 수 있습니다.");
     clearFiles();
     return;
   }
 
+  const modifyGalleryId = computed(()=> props.modifyGalleryId ||  null);
   const newFiles = selectedFiles.map(f => ({
     raw: f,
     fileId: null,
-    galleryId: null
+    galleryId: modifyGalleryId.value
   }));
 
   files.value.push(...newFiles);
 
   console.log("선택된 파일들: " + files.value.map(f => f.raw.name));
   saveFile(newFiles);
+  emit('newUploadFiles', newFiles.length);
 }
 
 const clearFiles = () => {

@@ -13,6 +13,24 @@ const routes = [
         }
     },
     {
+        path:'/sign/input', name:'signUp',
+        component: ()=>import('@/components/account/SignUp.vue'),
+        meta:{
+            requiresAuth : false,
+            title:'회원가입',
+            layout : ContentLayout
+        },
+    },
+    {
+         path:'/kakao/oauth/callback', name:'KakaoCallback',
+        component: ()=>import('@/components/account/CallbackView.vue'),
+        meta:{
+            requiresAuth : false,
+            title:'로그인중',
+            layout : ContentLayout
+        },
+    },
+    {
         path:'/board/list', name:'boardList',
         component : ()=> import('@/components/board/BoardList.vue'),
         meta:{
